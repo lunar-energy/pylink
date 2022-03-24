@@ -1119,6 +1119,9 @@ class JLink(object):
         # target is to the J-Link.
         self.exec_command('Device = %s' % chip_name)
 
+        # Also need to select the interface.
+        self._dll.JLINKARM_TIF_Select(enums.JLinkInterfaces.SWD)
+
         # Need to select target interface speed here, so the J-Link knows what
         # speed to use to establish target communication.
         if speed == 'auto':
@@ -1198,8 +1201,8 @@ class JLink(object):
           Device version string.
         """
         version = int(self._dll.JLINKARM_GetDLLVersion())
-        major = version / 10000
-        minor = (version / 100) % 100
+        major = version // 10000
+        minor = (version // 100) % 100
         rev = version % 100
         rev = '' if rev == 0 else chr(rev + ord('a') - 1)
         return '%d.%02d%s' % (major, minor, rev)
